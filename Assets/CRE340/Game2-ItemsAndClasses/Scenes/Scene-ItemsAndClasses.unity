@@ -308,7 +308,9 @@ MonoBehaviour:
     type: 3}
   manaPotionPrefab: {fileID: 4596649149045805454, guid: fde64120c589a8a49bc8acfedab8114b,
     type: 3}
-  numberOfItemsEachSide: 3
+  funPotionPrefab: {fileID: 1091314131787948561, guid: 1da073468d3fb014dbaeb622f3d5b09c,
+    type: 3}
+  numberOfItemsEachSide: 5
   spacing: 2
 --- !u!1 &312829435
 GameObject:
@@ -468,7 +470,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
