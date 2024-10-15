@@ -16,12 +16,12 @@ public class Crate : MonoBehaviour, IDamagable
     {
         health -= damage;
 
-        HealthEventManager.OnObjectDamaged?.Invoke(health);
+        HealthEventManager.OnObjectDamaged?.Invoke(gameObject.name, health);
         
         ShowHitEffect();
         if(health <= 0)
         {
-            HealthEventManager.OnObjectDestroyed?.Invoke(health);
+            HealthEventManager.OnObjectDestroyed?.Invoke(gameObject.name, health);
             Destroy(gameObject);
         }
     }

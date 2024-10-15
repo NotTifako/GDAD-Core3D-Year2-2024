@@ -2,28 +2,31 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamagable
 {
-    public int health = 10;
+    public EnemyData enemyData;
+
     private Material mat;
     private Color originalColor;
 
     private void Start()
     {
+        gameObject.name = enemyData.enemyName;
         mat = GetComponent<Renderer>().material;
+        mat.color = enemyData.enemyColor;
         originalColor = mat.color;
     }
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
+        enemyData.health -= damage;
 
-        HealthEventManager.OnObjectDamaged?.Invoke(health);
+        HealthEventManager.OnObjectDamaged?.Invoke(gameObject.name, enemyData.health);
 
         ShowHitEffect();
-        if (health <= 0)
+        if (enemyData.health <= 0)
         {
             Die();
             
-            HealthEventManager.OnObjectDestroyed?.Invoke(health);
+            HealthEventManager.OnObjectDestroyed?.Invoke(gameObject.name, enemyData.health);
         }
     }
 

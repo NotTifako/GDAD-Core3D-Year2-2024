@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8613021977823557235}
   - component: {fileID: 9102984143822887853}
   - component: {fileID: 3103427834492440979}
-  - component: {fileID: -9025092270709552186}
+  - component: {fileID: 834324242799345157}
   m_Layer: 0
   m_Name: Exploding Crate
   m_TagString: Untagged
@@ -134,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-9025092270709552186
+--- !u!114 &834324242799345157
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
