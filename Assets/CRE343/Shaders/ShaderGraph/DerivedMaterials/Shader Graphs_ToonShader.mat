@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Shader Graphs_ToonShader
-  m_Shader: {fileID: -6465566751694194690, guid: 772e8aed1adc86b4d8234fb69cbd6e09,
+  m_Shader: {fileID: -6465566751694194690, guid: 6489b6049b8d6c34db9b9853e6effdb4,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -42,7 +42,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Max: 1
     - _MaxBrightness: 1
+    - _Min: 0.3
     - _MinBrightness: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
