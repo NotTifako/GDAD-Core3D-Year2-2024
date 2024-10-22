@@ -20,18 +20,15 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         rb.velocity = Vector3.zero;
-
+        //enable rigidbody gravity
         rb.useGravity = true;
         
-        //check if the bullet hit something that has the 'IDamagable' interface   (Modify this script here to check if the object has the 'IDamagable' interface and call the 'TakeDamage' and ShowHitEffect method)
-        if (collision.gameObject.GetComponent<IDamagable>() != null)
-        {
-            IDamagable damagable = collision.gameObject.GetComponent<IDamagable>();
-
-            damagable.TakeDamage(damage);
-            damagable.ShowHitEffect();
+        //check if the bullet hit something that has the 'IDamagable' interface
+        if (collision.gameObject.GetComponent<IDamagable>() != null){
+            IDamagable damageable = collision.gameObject.GetComponent<IDamagable>();
+            damageable.TakeDamage(damage);
+            damageable.ShowHitEffect();
         }
 
-        Destroy(gameObject);
     }
 }
