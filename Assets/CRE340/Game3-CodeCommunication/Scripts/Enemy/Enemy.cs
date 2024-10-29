@@ -55,14 +55,14 @@ public class Enemy : MonoBehaviour, IDamagable
             Instantiate(dieEffectPrefab, transform.position, Quaternion.identity);
         }
 
+        // Optional: add death logic, like spawning loot or playing an animation
+        Destroy(gameObject);
+
         // Debug log to show that the enemy has died
         Debug.Log("Enemy has died");
         
-        //increase the players score in the game manager
-        GameManager.Instance.AddScore(10);
-        
-        // Optional: add death logic, like spawning loot or playing an animation
-        Destroy(gameObject);
+        //increase the players score 
+        GameManager.Instance.AddScore(10 * enemyData.health);
     }
 
     public void ShowHitEffect()

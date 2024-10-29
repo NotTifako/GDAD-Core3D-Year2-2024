@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
+using TMPro; // Use TextMeshPro for UI elements
 
 public class UI_EventListener : MonoBehaviour
 {
@@ -7,11 +9,13 @@ public class UI_EventListener : MonoBehaviour
 
     private void Awake()
     {
+        // Get the UI_Display component
         uiDisplay = GetComponent<UI_Display>();
     }
 
     private void OnEnable()
     {
+        // Subscribe to UI events
         UIEventHandler.OnPlayerNameChanged += UpdatePlayerName;
         UIEventHandler.OnPlayerHealthChanged += UpdatePlayerHealth;
         UIEventHandler.OnScoreChanged += UpdateScore;
@@ -19,11 +23,13 @@ public class UI_EventListener : MonoBehaviour
 
     private void OnDisable()
     {
+        // Unsubscribe from UI events
         UIEventHandler.OnPlayerNameChanged -= UpdatePlayerName;
         UIEventHandler.OnPlayerHealthChanged -= UpdatePlayerHealth;
         UIEventHandler.OnScoreChanged -= UpdateScore;
     }
 
+    // Update the player name in the UI
     private void UpdatePlayerName(string playerName)
     {
         if(uiDisplay != null)
@@ -32,6 +38,7 @@ public class UI_EventListener : MonoBehaviour
         }
     }
 
+    // Update the player health in the UI
     private void UpdatePlayerHealth(int playerHealth)
     {
         if(uiDisplay != null)
@@ -40,6 +47,7 @@ public class UI_EventListener : MonoBehaviour
         }
     }
 
+    // Update the score in the UI
     private void UpdateScore(int score)
     {
         if(uiDisplay != null)
