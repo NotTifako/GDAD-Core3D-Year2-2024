@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Linq;
 
 using TMPro;
-using UnityEngine.Rendering;
 
 public class EventListener : MonoBehaviour
 {
@@ -15,9 +14,6 @@ public class EventListener : MonoBehaviour
         // Subscribe to events
         HealthEventManager.OnObjectDamaged += HandleObjectDamaged;
         HealthEventManager.OnObjectDestroyed += HandleObjectDestroyed;
-
-        InventoryManager.OnItemAdded += HandleItemAdded;
-        InventoryManager.OnItemRemoved += HandleItemRemoved;
     }
 
     private void OnDisable()
@@ -25,35 +21,20 @@ public class EventListener : MonoBehaviour
         // Unsubscribe from events to avoid memory leaks
         HealthEventManager.OnObjectDamaged -= HandleObjectDamaged;
         HealthEventManager.OnObjectDestroyed -= HandleObjectDestroyed;
-
-        InventoryManager.OnItemAdded -= HandleItemAdded;
-        InventoryManager.OnItemRemoved -= HandleItemRemoved;
     }
 
     private void HandleObjectDamaged(string name, int remainingHealth)
     {
         string message = $"An object called {name} was damaged! Remaining Health: {remainingHealth}";
         Debug.Log(message);
-        UpdateLog(message, lineCount);
+        UpdateLog(message, 10);
     }
 
     private void HandleObjectDestroyed(string name, int remainingHealth)
     {
         string message = $"An object called {name} was destroyed!";
         Debug.Log(message);
-        UpdateLog(message, lineCount);
-    }
-
-    private void HandleItemAdded(InventoryItem item)
-    {
-        string message = $"{item.name} was added to the inventory.";
-        UpdateLog(message, lineCount);
-    }
-
-    private void HandleItemRemoved(InventoryItem item)
-    {
-        string message = $"{item.name} was removed from the inventory.";
-        UpdateLog(message, lineCount);
+        UpdateLog(message, 10);
     }
 
     //use this for adding to the log text - this will add the message to the log text endlessly
@@ -77,7 +58,7 @@ public class EventListener : MonoBehaviour
             lines.Add(message);
 
             // Check if the number of lines exceeds the limit
-            if (lines.Count >= maxLines)
+            if (lines.Count > maxLines)
             {
                 // Remove the oldest line
                 lines.RemoveAt(0);
