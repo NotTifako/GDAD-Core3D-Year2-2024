@@ -1,18 +1,14 @@
 using UnityEngine;
-
 using DG.Tweening;
-using UnityEditor;
 
-public class Enemy : MonoBehaviour, IDamagable
+public class Enemy : EnemyBase
 {
     public EnemyData enemyData; // Reference to the EnemyData ScriptableObject
     public GameObject dieEffectPrefab; // Reference to the die effect prefab
+    private int health;
     public int damage = 10; // Damage dealt by the enemy
 
-    private int health = 10;
-
     private Material mat;
-    private Color originalColor;
 
     private void Awake()
     {
@@ -20,9 +16,8 @@ public class Enemy : MonoBehaviour, IDamagable
         gameObject.name = enemyData.enemyName;
         health = enemyData.health;
         damage = enemyData.damage;
-        GetComponent<Renderer>().material.color = enemyData.enemyColor;
 
-        Debug.Log($"Enemy {enemyData.enemyName} spawned with {enemyData.health} health and {enemyData.speed} speed.");
+        GetComponent<Renderer>().material.color = enemyData.enemyColor;
     }
 
     private void Start()
@@ -40,7 +35,7 @@ public class Enemy : MonoBehaviour, IDamagable
     }
 
     // Method to handle taking damage (from player or other sources)
-    public void TakeDamage(int damage)
+    public override void TakeDamage(int damage)
     {
         health -= damage;
 
@@ -58,7 +53,7 @@ public class Enemy : MonoBehaviour, IDamagable
         }
     }
 
-    private void Die()
+    protected override void Die()
     {
         // Instantiate die effect and apply area damage
         if (dieEffectPrefab != null)
@@ -79,20 +74,9 @@ public class Enemy : MonoBehaviour, IDamagable
         GameManager.Instance.AddScore(10 * enemyData.health);
     }
 
-    public void ShowHitEffect()
+    public override void Move()
     {
-        // Get the material and flash it red
-        Material mat = GetComponent<Renderer>().material;
-        mat.color = Color.red;
-        Invoke("ResetMaterial", 0.1f);
-        
-        //TODO - add an audio feedback when the enemy is hit
-        AudioEventManager.PlaySFX(this.transform, "Flesh Hit", 1.0f, 1.0f, true, 0.1f, 0f);
-    }
-
-    private void ResetMaterial()
-    {
-        mat.color = originalColor;
+        // Do movement code here
     }
 
     // Method for the enemy to deal damage to another IDamagable object
