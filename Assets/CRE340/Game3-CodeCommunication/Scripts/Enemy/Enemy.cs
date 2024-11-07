@@ -62,7 +62,7 @@ public class Enemy : EnemyBase
         }
         
         //TODO - add and audio feedback when the enemy dies
-        AudioEventManager.PlaySFX(null, "Explosion Flesh", 1.0f, 1.0f, true, 0.1f, 0f);
+        //AudioEventManager.AudioEvent_PlaySFX(null, "Explosion Flesh", 1.0f, 1.0f, true, 0.1f, 0f, null);
 
         // Optional: add death logic, like spawning loot or playing an animation
         Destroy(gameObject);
