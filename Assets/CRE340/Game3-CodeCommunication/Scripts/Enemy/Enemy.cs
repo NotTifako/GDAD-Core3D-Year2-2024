@@ -1,14 +1,25 @@
 using UnityEngine;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class Enemy : EnemyBase
 {
     public EnemyData enemyData; // Reference to the EnemyData ScriptableObject
-    public GameObject dieEffectPrefab; // Reference to the die effect prefab
-    private int health;
-    public int damage = 10; // Damage dealt by the enemy
 
-    private Material mat;
+    [SerializeField] private int damage = 10;
+    [SerializeField] private int health = 10;
+
+    public float speed = 2f;
+    public float chaseRange = 5f;
+
+    private IEnemyState currentState;
+
+    public Transform target;
+    public GameObject dieEffectPrefab; // Reference to the die effect prefab
+
+    private Material material;
+
+
 
     private void Awake()
     {
@@ -16,14 +27,36 @@ public class Enemy : EnemyBase
         gameObject.name = enemyData.enemyName;
         health = enemyData.health;
         damage = enemyData.damage;
+        speed = enemyData.speed;
+        chaseRange = enemyData.chaseRange;
 
         GetComponent<Renderer>().material.color = enemyData.enemyColor;
     }
 
-    private void Start()
+    private void Start() 
     {
-        mat = GetComponent<Renderer>().material;
-        originalColor = mat.color;
+        material = GetComponent<Renderer>().material;
+        originalColor = material.color;
+
+        SetState(new EnemyState_Idle());
+        Invoke("LocatePlayer", 1f);
+    }
+    
+    private void Update()
+    {
+        currentState?.Update(this);
+    }
+
+    public void SetState(IEnemyState newState)
+    {
+        currentState?.Exit(this);
+        currentState = newState;
+        currentState?.Enter(this);
+    }
+
+    public string GetCurrentStateName()
+    {
+        return currentState != null ? currentState.GetType().Name.Replace("Enemy", "") : "No State";
     }
     
     private void OnEnable()
@@ -50,6 +83,11 @@ public class Enemy : EnemyBase
 
             // Trigger the OnObjectDestroyed event
             HealthEventManager.OnObjectDestroyed?.Invoke(gameObject.name, health);
+        }
+
+        if(GetCurrentStateName() != "State_Chase")
+        {
+            SetState(new EnemyState_Angry());
         }
     }
 
@@ -90,6 +128,14 @@ public class Enemy : EnemyBase
             // Call TakeDamage on the object, dealing the enemy's damage amount
             damagableObject.TakeDamage(damage);
             Debug.Log($"{gameObject.name} dealt {damage} damage to {collision.gameObject.name}.");
+        }
+    }
+
+    private void LocatePlayer()
+    {
+        if(target == null)
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
         }
     }
 }
