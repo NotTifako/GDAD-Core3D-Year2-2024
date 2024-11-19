@@ -7,6 +7,18 @@ public class InventoryManager : MonoBehaviour {
     public List<InventoryItem> items = new List<InventoryItem>();
     private const int MaxItems = 8; // Limit inventory to 8 items
 
+    #region Stuff to make it work with the Save system stuff
+
+    private SaveLoadManager saveLoadManager;
+
+    void Start()
+    {
+        saveLoadManager = FindObjectOfType<SaveLoadManager>();
+    }
+
+    #endregion
+
+
     public bool CanAddItem() {
         return items.Count < MaxItems; // Returns true if there's room for more items
     }
@@ -18,6 +30,8 @@ public class InventoryManager : MonoBehaviour {
         } else {
             Debug.Log("Inventory is full");
         }
+
+        saveLoadManager.AddToInventory(newItem.name);
     }
 
     public void RemoveItem(InventoryItem item) {

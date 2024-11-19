@@ -1,25 +1,26 @@
 using UnityEngine;
 using DG.Tweening;
-using Unity.VisualScripting;
 
 public class Enemy : EnemyBase
 {
-    public EnemyData enemyData; // Reference to the EnemyData ScriptableObject
+    [Space(10)]  
+    [Header("Enemy Data")]  
+    public EnemyData enemyData; // Reference to the EnemyData ScriptableObject  
+    [SerializeField] private int damage = 10; // Damage dealt by the enemy  
+    [SerializeField] private int health = 10;  
+    public float speed = 2f;  
+    public float chaseRange = 5f;         // Range within which the enemy starts chasing  
+    
+    
+    [Space(10)]  
+    [Header("Enemy State")]  
+    private IEnemyState currentState;     // Reference to the current state  
+    public Transform target;              // Reference to the player or target  
 
-    [SerializeField] private int damage = 10;
-    [SerializeField] private int health = 10;
-
-    public float speed = 2f;
-    public float chaseRange = 5f;
-
-    private IEnemyState currentState;
-
-    public Transform target;
-    public GameObject dieEffectPrefab; // Reference to the die effect prefab
-
-    private Material material;
-
-
+    
+    [Space(10)]  
+    [Header("Enemy FX")]  
+    public GameObject dieEffectPrefab; // Reference to the die effect prefab  
 
     private void Awake()
     {
@@ -30,44 +31,50 @@ public class Enemy : EnemyBase
         speed = enemyData.speed;
         chaseRange = enemyData.chaseRange;
 
+        // Set initial color based on EnemyData
         GetComponent<Renderer>().material.color = enemyData.enemyColor;
     }
-
-    private void Start() 
+    private void Start()
     {
-        material = GetComponent<Renderer>().material;
-        originalColor = material.color;
-
+        // Start with the Idle state
         SetState(new EnemyState_Idle());
+        
+        // Find the player in the scene
         Invoke("LocatePlayer", 1f);
+    }
+    private void OnEnable()
+    {
+        // Scale the enemy up from 0 to 1 over 1 second using DOTween for spawn animation
+        transform.localScale = Vector3.zero;
+        transform.DOScale(Vector3.one, 1f).SetEase(Ease.OutBounce);
     }
     
     private void Update()
     {
+        // Delegate behaviour to the current state
         currentState?.Update(this);
     }
-
+    
     public void SetState(IEnemyState newState)
     {
+        // Exit the current state and enter the new state
         currentState?.Exit(this);
         currentState = newState;
         currentState?.Enter(this);
     }
-
+    
     public string GetCurrentStateName()
     {
-        return currentState != null ? currentState.GetType().Name.Replace("Enemy", "") : "No State";
-    }
-    
-    private void OnEnable()
-    {
-        // TODO - add an animation event to play the spawn animation tween
-        //scale the enemy up from 0 to 1 in 1 second using DOTween
-        transform.localScale = Vector3.zero;
-        transform.DOScale(Vector3.one, 1f).SetEase(Ease.OutBounce);
+        if (currentState != null)
+        {
+            string stateName = currentState.GetType().Name;
+            return stateName.Replace("Enemy", "");
+        }
+        return "No State";
     }
 
-    // Method to handle taking damage (from player or other sources)
+    
+    //--------------------------------------------------------------------------------
     public override void TakeDamage(int damage)
     {
         health -= damage;
@@ -75,19 +82,14 @@ public class Enemy : EnemyBase
         // Trigger the OnObjectDamaged event
         HealthEventManager.OnObjectDamaged?.Invoke(gameObject.name, health);
 
+        // Show hit effect using the inherited ShowHitEffect method
         ShowHitEffect();
 
         if (health <= 0)
         {
             Die();
-
             // Trigger the OnObjectDestroyed event
             HealthEventManager.OnObjectDestroyed?.Invoke(gameObject.name, health);
-        }
-
-        if(GetCurrentStateName() != "State_Chase")
-        {
-            SetState(new EnemyState_Angry());
         }
     }
 
@@ -98,44 +100,45 @@ public class Enemy : EnemyBase
         {
             Instantiate(dieEffectPrefab, transform.position, Quaternion.identity);
         }
-        
-        //TODO - add and audio feedback when the enemy dies
-        //AudioEventManager.AudioEvent_PlaySFX(null, "Explosion Flesh", 1.0f, 1.0f, true, 0.1f, 0f, null);
 
-        // Optional: add death logic, like spawning loot or playing an animation
-        Destroy(gameObject);
+        // Play sound when the enemy dies
+        AudioEventManager.PlaySFX(null, "Explosion Flesh", 1.0f, 1.0f, true, 0.1f, 0f, "null");
 
-        // Debug log to show that the enemy has died
+        Destroy(gameObject); // Destroy the enemy GameObject
         Debug.Log("Enemy has died");
+
+        // Increase the player's score based on enemy health
+        GameManager.Instance.AddScore(4 * enemyData.health);
         
-        //increase the players score 
-        GameManager.Instance.AddScore(10 * enemyData.health);
+        // Increase the player's experience based on enemy health
+        GameManager.Instance.AddExperience(1 * enemyData.health);
     }
 
     public override void Move()
     {
-        // Do movement code here
+        // Define movement behaviour specific to this enemy type if needed
     }
 
-    // Method for the enemy to deal damage to another IDamagable object
     private void OnCollisionEnter(Collision collision)
     {
         // Check if the collided object has the IDamagable interface
         IDamagable damagableObject = collision.gameObject.GetComponent<IDamagable>();
-        // Prevent enemy from damaging other enemies (check the tag or another distinguishing property)
+        
+        // Prevent enemy from damaging other enemies
         if (damagableObject != null && collision.gameObject.tag != "Enemy")
         {
-            // Call TakeDamage on the object, dealing the enemy's damage amount
             damagableObject.TakeDamage(damage);
             Debug.Log($"{gameObject.name} dealt {damage} damage to {collision.gameObject.name}.");
         }
     }
-
+    
     private void LocatePlayer()
     {
-        if(target == null)
+        // Find the player in the scene if the player exaists
+        if (target == null)
         {
             target = GameObject.FindGameObjectWithTag("Player").transform;
         }
+        
     }
 }

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2dcb9c22d520ae4dba8797341850106, type: 3}
-  m_Name: Bonus
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 0}
+  m_Name: Bonus Item
+  m_EditorClassIdentifier: Assembly-CSharp::BonusItem
   itemName: Bonus Item
-  icon: {fileID: 21300000, guid: 8ca9c61bf3c7edc49aa240bac2e61ce2, type: 3}
+  icon: {fileID: 21300000, guid: 9c0a21cd0c2b0474e838f20299b2bb4e, type: 3}
   itemType: 2
-  bonusPoints: 3
+  bonusPoints: 30
