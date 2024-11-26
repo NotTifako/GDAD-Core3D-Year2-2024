@@ -16,6 +16,7 @@ public class PlayerProperties
         this.inventory = inventory;
     }
 
+    // Default constructor for empty player data
     public PlayerProperties()
     {
         name = "Player";

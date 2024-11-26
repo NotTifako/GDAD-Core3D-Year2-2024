@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8181088e457e6d4aa57025cc074f963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: 2dbabf118bfa6dc4f959dc9fc11a176d, type: 2}
+  itemData: {fileID: 11400000, guid: 51e3c125c35845740958c861f099f6d9, type: 2}
   collectEffectPrefab: {fileID: 7888857835762348946, guid: 84dab4a8cf751fc4181b5f09a6186c21,
     type: 3}
 --- !u!82 &-8728685417422269952
